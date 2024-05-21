@@ -82,5 +82,52 @@ const userVerification = asyncHandler(async (req, res) => {
     res.json(req.user);
 });
 
+/*
+    desc    -   get all admins
+    route   -   GET -   /api/admin/adminDashboard/allAdmins (http://localhost:5001/api/categories)
+    access  -   public
+*/
+const getAllAdmins = asyncHandler(async (req, res) => {
+    const allAdmins = await adminModel.find()
+    if (!allAdmins) {
+        res.status(404)
+        throw new Error("No admins found")
+    }
+    res.status(200).json(allAdmins)
+})
 
-module.exports = { registerAdmin, loginAdmin, userVerification }
+/*
+    desc    -   delete admin
+    route   -   GET -   /api/admin/adminDashboard/deleteAdmin/:id
+    access  -   public
+*/
+const deleteAdmin = asyncHandler(async (req, res) => {
+    const deletedAdmin = await adminModel.findByIdAndDelete(req.params.id)
+    if (!deletedAdmin) {
+        res.status(404)
+        throw new Error("Admin not found to delete")
+    }
+    res.status(200).json(deletedAdmin)
+})
+
+/*
+    desc    -   edit Admin
+    route   -   PUT -   /api/admin/adminDashboard/editAdmin/:id
+    access  -   public
+*/
+const editAdmin = asyncHandler(async (req, res) => {
+    const admin = adminModel.findById(req.params.id)
+    if (!admin) {
+        res.status(404)
+        throw new Error("Admin not found")
+    }
+    const editedAdmin = await adminModel.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true }
+    )
+    res.status(200).json(editedAdmin)
+})
+
+
+module.exports = { registerAdmin, loginAdmin, userVerification, getAllAdmins, deleteAdmin, editAdmin }
