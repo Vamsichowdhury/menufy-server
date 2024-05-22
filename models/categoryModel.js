@@ -42,7 +42,7 @@ const categorySchema = new mongoose.Schema({
     },
     totalItems: {
         type: Array,
-        default: [itemSchema]
+        default: []
     }
 });
 
