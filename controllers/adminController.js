@@ -44,19 +44,21 @@ const registerAdmin = asyncHandler(async (req, res) => {
     access  -   public
 */
 const loginAdmin = asyncHandler(async (req, res) => {
-    const { email, password } = req.body
+    const { email, password, adminLevel } = req.body
 
-    if (!email || !password) {
+    if (!email || !password || !adminLevel) {
         res.status(400)
         throw new Error("All fields are mandatory")
     }
-
     const admin = await adminModel.findOne({ email })
     if (!admin) {
         res.status(400)
         throw new Error("Invalid email or password")
     }
-
+    if (admin.adminLevel === 'Admin' && adminLevel === 'superAdmin') {
+        res.status(403).json({ message: 'You do not have Super Admin access' });
+        return;
+    }
     const passwordIsValid = await bcrypt.compare(password, admin.password)
     if (!passwordIsValid) {
         res.status(400)

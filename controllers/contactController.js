@@ -6,7 +6,6 @@ const contactModel = require("../models/contactModel")
     access  -   public
 */
 const getAllContacts = asyncHandler(async (req, res) => {
-    console.log("test")
     const contacts = await contactModel.find()
     if (!contacts) {
         res.status(404)
@@ -24,7 +23,6 @@ const getContact = async (req, res, next) => {
     try {
         const contact = await contactModel.findById(req.params.id);
         if (!contact) {
-            console.log("vamsi in",{contact})
             res.status(404)
             throw new Error("Contact not found");
         }
@@ -46,7 +44,6 @@ const createContact = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error("All fields are mandatory")
     }
-    console.log(name, phNo, email)
     const contact = await contactModel.create({
         name, phNo, email
     })
